@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28010.2016
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BirthdayManager", "BirthdayManager\BirthdayManager.csproj", "{89B52B07-B380-4C70-A917-56373CFBC809}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BirthdayFormat", "BirthdayFormat\BirthdayFormat.csproj", "{67D2B09D-9092-4B0D-81D4-8CF27EC676D0}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{89B52B07-B380-4C70-A917-56373CFBC809}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{89B52B07-B380-4C70-A917-56373CFBC809}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{89B52B07-B380-4C70-A917-56373CFBC809}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{89B52B07-B380-4C70-A917-56373CFBC809}.Release|Any CPU.Build.0 = Release|Any CPU
+		{67D2B09D-9092-4B0D-81D4-8CF27EC676D0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{67D2B09D-9092-4B0D-81D4-8CF27EC676D0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{67D2B09D-9092-4B0D-81D4-8CF27EC676D0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{67D2B09D-9092-4B0D-81D4-8CF27EC676D0}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {7C238686-08F1-4334-98FC-590424F41CCA}
+	EndGlobalSection
+EndGlobal
