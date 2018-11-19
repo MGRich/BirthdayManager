@@ -30,7 +30,7 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(BirthdayManager));
-            this.menuStrip1 = new System.Windows.Forms.MenuStrip();
+            this.menuStrip = new System.Windows.Forms.MenuStrip();
             this.fileButton = new System.Windows.Forms.ToolStripMenuItem();
             this.openButton = new System.Windows.Forms.ToolStripMenuItem();
             this.saveButton = new System.Windows.Forms.ToolStripMenuItem();
@@ -38,30 +38,35 @@
             this.hideToTray = new System.Windows.Forms.ToolStripMenuItem();
             this.nameList = new System.Windows.Forms.ListBox();
             this.dateShow = new System.Windows.Forms.DateTimePicker();
-            this.label1 = new System.Windows.Forms.Label();
+            this.nameLabel = new System.Windows.Forms.Label();
             this.nameText = new System.Windows.Forms.TextBox();
-            this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
             this.addButton = new System.Windows.Forms.Button();
             this.removeButton = new System.Windows.Forms.Button();
             this.startCheck = new System.Windows.Forms.CheckBox();
             this.notifyIcon = new System.Windows.Forms.NotifyIcon(this.components);
             this.yearLabel = new System.Windows.Forms.Label();
             this.dayLabel = new System.Windows.Forms.Label();
-            this.menuStrip1.SuspendLayout();
+            this.notifyContext = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.showStripButton = new System.Windows.Forms.ToolStripMenuItem();
+            this.exitStripButton = new System.Windows.Forms.ToolStripMenuItem();
+            this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuStrip.SuspendLayout();
+            this.notifyContext.SuspendLayout();
             this.SuspendLayout();
             // 
-            // menuStrip1
+            // menuStrip
             // 
-            this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.menuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fileButton,
-            this.hideToTray});
-            this.menuStrip1.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.Flow;
-            this.menuStrip1.Location = new System.Drawing.Point(0, 0);
-            this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.RenderMode = System.Windows.Forms.ToolStripRenderMode.System;
-            this.menuStrip1.Size = new System.Drawing.Size(369, 23);
-            this.menuStrip1.TabIndex = 1;
-            this.menuStrip1.Text = "menuStrip1";
+            this.hideToTray,
+            this.exitToolStripMenuItem});
+            this.menuStrip.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.Flow;
+            this.menuStrip.Location = new System.Drawing.Point(0, 0);
+            this.menuStrip.Name = "menuStrip";
+            this.menuStrip.RenderMode = System.Windows.Forms.ToolStripRenderMode.System;
+            this.menuStrip.Size = new System.Drawing.Size(369, 23);
+            this.menuStrip.TabIndex = 1;
+            this.menuStrip.Text = "menuStrip1";
             // 
             // fileButton
             // 
@@ -76,21 +81,21 @@
             // openButton
             // 
             this.openButton.Name = "openButton";
-            this.openButton.Size = new System.Drawing.Size(180, 22);
+            this.openButton.Size = new System.Drawing.Size(160, 22);
             this.openButton.Text = "Open";
             this.openButton.Click += new System.EventHandler(this.open);
             // 
             // saveButton
             // 
             this.saveButton.Name = "saveButton";
-            this.saveButton.Size = new System.Drawing.Size(180, 22);
-            this.saveButton.Text = "Save";
+            this.saveButton.Size = new System.Drawing.Size(160, 22);
+            this.saveButton.Text = "Save (to default)";
             this.saveButton.Click += new System.EventHandler(this.save);
             // 
             // saveAsButton
             // 
             this.saveAsButton.Name = "saveAsButton";
-            this.saveAsButton.Size = new System.Drawing.Size(180, 22);
+            this.saveAsButton.Size = new System.Drawing.Size(160, 22);
             this.saveAsButton.Text = "Save As";
             this.saveAsButton.Click += new System.EventHandler(this.saveAs);
             // 
@@ -118,14 +123,14 @@
             this.dateShow.TabIndex = 3;
             this.dateShow.ValueChanged += new System.EventHandler(this.dateChange);
             // 
-            // label1
+            // nameLabel
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(139, 58);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(38, 13);
-            this.label1.TabIndex = 4;
-            this.label1.Text = "Name:";
+            this.nameLabel.AutoSize = true;
+            this.nameLabel.Location = new System.Drawing.Point(139, 58);
+            this.nameLabel.Name = "nameLabel";
+            this.nameLabel.Size = new System.Drawing.Size(38, 13);
+            this.nameLabel.TabIndex = 4;
+            this.nameLabel.Text = "Name:";
             // 
             // nameText
             // 
@@ -172,7 +177,7 @@
             this.notifyIcon.Text = "BirthdayManager";
             this.notifyIcon.Visible = true;
             this.notifyIcon.BalloonTipClicked += new System.EventHandler(this.show);
-            this.notifyIcon.Click += new System.EventHandler(this.show);
+            this.notifyIcon.MouseUp += new System.Windows.Forms.MouseEventHandler(this.notifyClick);
             // 
             // yearLabel
             // 
@@ -188,9 +193,39 @@
             this.dayLabel.AutoSize = true;
             this.dayLabel.Location = new System.Drawing.Point(293, 58);
             this.dayLabel.Name = "dayLabel";
-            this.dayLabel.Size = new System.Drawing.Size(47, 13);
+            this.dayLabel.Size = new System.Drawing.Size(60, 26);
             this.dayLabel.TabIndex = 11;
-            this.dayLabel.Text = "+ 0 days";
+            this.dayLabel.Text = "0 days until\r\nbirthday";
+            // 
+            // notifyContext
+            // 
+            this.notifyContext.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.showStripButton,
+            this.exitStripButton});
+            this.notifyContext.Name = "notifyContext";
+            this.notifyContext.RenderMode = System.Windows.Forms.ToolStripRenderMode.System;
+            this.notifyContext.Size = new System.Drawing.Size(134, 48);
+            // 
+            // showStripButton
+            // 
+            this.showStripButton.Name = "showStripButton";
+            this.showStripButton.Size = new System.Drawing.Size(133, 22);
+            this.showStripButton.Text = "Show/Hide";
+            this.showStripButton.Click += new System.EventHandler(this.toggle);
+            // 
+            // exitStripButton
+            // 
+            this.exitStripButton.Name = "exitStripButton";
+            this.exitStripButton.Size = new System.Drawing.Size(133, 22);
+            this.exitStripButton.Text = "Exit";
+            this.exitStripButton.Click += new System.EventHandler(this.exit);
+            // 
+            // exitToolStripMenuItem
+            // 
+            this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(37, 19);
+            this.exitToolStripMenuItem.Text = "Exit";
+            this.exitToolStripMenuItem.Click += new System.EventHandler(this.exit);
             // 
             // BirthdayManager
             // 
@@ -203,33 +238,33 @@
             this.Controls.Add(this.removeButton);
             this.Controls.Add(this.addButton);
             this.Controls.Add(this.nameText);
-            this.Controls.Add(this.label1);
+            this.Controls.Add(this.nameLabel);
             this.Controls.Add(this.dateShow);
             this.Controls.Add(this.nameList);
-            this.Controls.Add(this.menuStrip1);
+            this.Controls.Add(this.menuStrip);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.MainMenuStrip = this.menuStrip1;
+            this.MainMenuStrip = this.menuStrip;
             this.Name = "BirthdayManager";
             this.Text = "BirthdayManager";
-            this.menuStrip1.ResumeLayout(false);
-            this.menuStrip1.PerformLayout();
+            this.menuStrip.ResumeLayout(false);
+            this.menuStrip.PerformLayout();
+            this.notifyContext.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
         }
 
         #endregion
-        private System.Windows.Forms.MenuStrip menuStrip1;
+        private System.Windows.Forms.MenuStrip menuStrip;
         private System.Windows.Forms.ToolStripMenuItem fileButton;
         private System.Windows.Forms.ToolStripMenuItem openButton;
         private System.Windows.Forms.ToolStripMenuItem saveButton;
         private System.Windows.Forms.ToolStripMenuItem saveAsButton;
         private System.Windows.Forms.ListBox nameList;
         private System.Windows.Forms.DateTimePicker dateShow;
-        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label nameLabel;
         private System.Windows.Forms.TextBox nameText;
-        private System.ComponentModel.BackgroundWorker backgroundWorker1;
         private System.Windows.Forms.ToolStripMenuItem hideToTray;
         private System.Windows.Forms.Button addButton;
         private System.Windows.Forms.Button removeButton;
@@ -237,6 +272,10 @@
         private System.Windows.Forms.NotifyIcon notifyIcon;
         private System.Windows.Forms.Label yearLabel;
         private System.Windows.Forms.Label dayLabel;
+        private System.Windows.Forms.ContextMenuStrip notifyContext;
+        private System.Windows.Forms.ToolStripMenuItem showStripButton;
+        private System.Windows.Forms.ToolStripMenuItem exitStripButton;
+        private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
     }
 }
 

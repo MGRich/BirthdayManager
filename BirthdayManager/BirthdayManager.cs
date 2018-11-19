@@ -26,17 +26,20 @@ namespace BirthdayManager
         public BirthdayManager()
         {
             InitializeComponent();
-            Console.WriteLine(Environment.GetCommandLineArgs()[1]);
-            if (Environment.GetCommandLineArgs()[1] == "s")
+            if (Environment.GetCommandLineArgs().Length == 2)
             {
-                Directory.SetCurrentDirectory(Path.GetDirectoryName(Application.ExecutablePath));
-                startCheck.Checked = true;
-                notifyIcon.ShowBalloonTip(3000, "BirthdayManager", "BirthdayManager is running!", ToolTipIcon.None);
-                hide(this, new EventArgs());
+                if (Environment.GetCommandLineArgs()[1] == "s")
+                {
+                    Directory.SetCurrentDirectory(Path.GetDirectoryName(Application.ExecutablePath));
+                    notify("BirthdayManager is running!");
+                    hide(this, new EventArgs());
+                }
             }
             Console.WriteLine(Directory.GetCurrentDirectory());
-            if (File.Exists("default.bdf")) open(this, new EventArgs());
-            t.Interval = 10000;
+            if (!File.Exists("default.bdf")) File.Create("default.bdf").Dispose();
+            open(this, new EventArgs());
+            if (Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run").GetValue("BirthdayManager") != null) startCheck.Checked = true;
+            t.Interval = 600000;
             t.Tick += checkNotif;
         }
 
@@ -57,7 +60,7 @@ namespace BirthdayManager
                 {
                     int age = day.Year - p.date.Year;
                     if (p.date > day.AddYears(-age)) age--;
-                    notifyIcon.ShowBalloonTip(10000, "BirthdayManager", "It's " + p.name + "'s birthday today! They're now " + age + " years old!", ToolTipIcon.None);
+                    notify("It's " + p.name + "'s birthday today! They're now " + age + " years old!");
                     notif[i] = true;
                 }
                 i++;
@@ -66,8 +69,6 @@ namespace BirthdayManager
 
         private void open(object sender, EventArgs e)
         {
-            nameList.Items.Clear();
-            t.Stop();
             if (sender == this)
             {
                 file = new BirthdayFile("default.bdf");
@@ -76,6 +77,7 @@ namespace BirthdayManager
             }
             else
             {
+                saveButton.Text = "Save";
                 OpenFileDialog open = new OpenFileDialog
                 {
                     Filter = "BirthdayManager File|*.bdf"
@@ -84,12 +86,16 @@ namespace BirthdayManager
                 file = new BirthdayFile(open.FileName);
                 path = open.FileName;
             }
+            nameList.Items.Clear();
+            notif.Clear();
             int i = 0;
             foreach (Person p in file.people)
             {
                 nameList.Items.Add(p.name);
-                notif.Add(i++, false);
+                notif.Add(i, false);
+                i++;
             }
+            t.Stop();
             t.Start();
         }
 
@@ -136,17 +142,25 @@ namespace BirthdayManager
 
         private void hide(object sender, EventArgs e)
         {
-            WindowState = FormWindowState.Minimized;
+            if (sender == hideToTray) notify("BirthdayManager is now hidden.");
             ShowInTaskbar = false;
-            if (sender != this) notifyIcon.ShowBalloonTip(1000, "BirthdayManager", "BirthdayManager has been hidden.", ToolTipIcon.None);
-            Hide();
+            Visible = false;
+        }
+
+        private void toggle(object sender, EventArgs e)
+        {
+            if (Visible == true)
+            {
+                notify("BirthdayManager is now hidden.");
+                hide(sender, e);
+            }
+            else show(sender, e);
         }
 
         private void show(object sender, EventArgs e)
         {
-            WindowState = FormWindowState.Normal;
             ShowInTaskbar = true;
-            Show();
+            Visible = true;
         }
 
         private void startChecked(object sender, EventArgs e)
@@ -166,17 +180,18 @@ namespace BirthdayManager
         {
             int age = DateTime.Today.Year - date.Year;
             if (date > DateTime.Today.AddYears(-age)) age--;
-            int days = (DateTime.Today - date).Days;
-            days -= age * 365;
+            DateTime next = date.AddYears(DateTime.Today.Year - date.Year);
+            if (next < DateTime.Today) next = next.AddYears(1);
+            int days = (next - DateTime.Today).Days;
             yearLabel.Text = age + " years old";
-            dayLabel.Text = "+ " + days + " days";
+            dayLabel.Text = days + " days until\nbirthday";
         }
 
         private void add(object sender, EventArgs e)
         {
             file.people.Add(new Person());
             nameList.Items.Add("New Person");
-            notif.Add(nameList.Items.Count - 1, false);
+            notif.Add(nameList.Items.Count - 1, true);
         }
 
         private void remove(object sender, EventArgs e)
@@ -185,6 +200,32 @@ namespace BirthdayManager
             file.people.RemoveAt(nameList.SelectedIndex);
             nameList.Items.RemoveAt(nameList.SelectedIndex);
             notif.Remove(nameList.SelectedIndex);
+        }
+
+        protected override void OnFormClosing(FormClosingEventArgs e)
+        {
+            base.OnFormClosing(e);
+            if (e.CloseReason == CloseReason.WindowsShutDown || e.CloseReason == CloseReason.ApplicationExitCall) return;
+
+            e.Cancel = true;
+            notify("BirthdayManager is now hidden.");
+            hide(nameLabel, e); //nameLabel used as dummy
+        }
+
+        private void exit(object sender, EventArgs e)
+        {
+            Application.Exit();
+        }
+
+        private void notifyClick(object sender, MouseEventArgs e)
+        {
+            if (e.Button != MouseButtons.Left) notifyContext.Show(Cursor.Position);
+            else toggle(sender, e);
+        }
+
+        private void notify(string text)
+        {
+            notifyIcon.ShowBalloonTip(10000, "BirthdayManager", text, ToolTipIcon.None);
         }
     }
 }
