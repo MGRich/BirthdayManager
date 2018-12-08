@@ -47,8 +47,14 @@ namespace BirthdayFormat
                 byte[] b = new byte[2];
                 s.Read(b, 0, 2);
                 int y = BitConverter.ToInt16(b, 0);
+                bool yl = false;
+                if (y == 0)
+                {
+                    yl = true;
+                    y = DateTime.Today.Year;
+                }
                 DateTime date = new DateTime(y, m, d);
-                people.Add(new Person(n, date));
+                people.Add(new Person(n, date, yl));
                 Console.WriteLine(s.Position + " " + s.Length);
             }
             s.Close();
@@ -63,6 +69,10 @@ namespace BirthdayFormat
                 s.WriteByte((byte)p.date.Month);
                 s.WriteByte((byte)p.date.Day);
                 short t = (short)p.date.Year;
+                if (p.yearless)
+                {
+                    t = 0;
+                }
                 s.Write(BitConverter.GetBytes(t), 0, 2);
             }
             s.Close();

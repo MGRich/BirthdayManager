@@ -59,9 +59,16 @@ namespace BirthdayManager
             {
                 if (day.Month == p.date.Month && day.Day == p.date.Day && !notif[i])
                 {
-                    int age = day.Year - p.date.Year;
-                    if (p.date > day.AddYears(-age)) age--;
-                    notify("It's " + p.name + "'s birthday today! They're now " + age + " years old!");
+                    if (p.yearless)
+                    {
+                        notify("It's " + p.name + "'s birthday today!");
+                    }
+                    else
+                    {
+                        int age = day.Year - p.date.Year;
+                        if (p.date > day.AddYears(-age)) age--;
+                        notify("It's " + p.name + "'s birthday today! They're now " + age + " years old!");
+                    }
                     notif[i] = true;
                 }
                 i++;
@@ -78,12 +85,12 @@ namespace BirthdayManager
             }
             else
             {
-                saveButton.Text = "Save";
                 OpenFileDialog open = new OpenFileDialog
                 {
                     Filter = "BirthdayManager File|*.bdf"
                 };
                 if (open.ShowDialog() != DialogResult.OK) return;
+                saveButton.Text = "Save";
                 file = new BirthdayFile(open.FileName);
                 path = open.FileName;
             }
@@ -106,6 +113,8 @@ namespace BirthdayManager
             dateShow.Value = file.people[nameList.SelectedIndex].date;
             nameText.Text = file.people[nameList.SelectedIndex].name;
             calculateAge(file.people[nameList.SelectedIndex].date);
+            yearlessCheck.Checked = file.people[nameList.SelectedIndex].yearless;
+            yearLabel.Visible = !file.people[nameList.SelectedIndex].yearless;
         }
 
         private void dateChange(object sender, EventArgs e)
@@ -134,9 +143,10 @@ namespace BirthdayManager
         private void nameChange(object sender, EventArgs e)
         {
             if (nameList.SelectedItem == null) return;
-            bool x = notif[nameList.SelectedIndex];
-            notif.Remove(nameList.SelectedIndex);
-            notif.Add(nameList.SelectedIndex, x);
+            //bool x = notif[nameList.SelectedIndex];
+            //notif.Remove(nameList.SelectedIndex);
+            //notif.Add(nameList.SelectedIndex, x);
+            //  the hell was the point in that?
             file.people[nameList.SelectedIndex].name = nameText.Text;
             nameList.Items[nameList.SelectedIndex] = nameText.Text;
         }
@@ -197,7 +207,10 @@ namespace BirthdayManager
 
         private void remove(object sender, EventArgs e)
         {
-            if (nameList.SelectedItem == null || MessageBox.Show("Are you sure you want to delete " + file.people[nameList.SelectedIndex].name + "?", "Delete Warning", MessageBoxButtons.YesNo) != DialogResult.Yes) return;
+            if (nameList.SelectedItem == null
+                || MessageBox.Show("Are you sure you want to remove " + file.people[nameList.SelectedIndex].name + " from the list?",
+                "Delete Warning",
+                MessageBoxButtons.YesNo) != DialogResult.Yes) return;
             file.people.RemoveAt(nameList.SelectedIndex);
             nameList.Items.RemoveAt(nameList.SelectedIndex);
             notif.Remove(nameList.SelectedIndex);
@@ -227,6 +240,13 @@ namespace BirthdayManager
         private void notify(string text)
         {
             notifyIcon.ShowBalloonTip(10000, "BirthdayManager", text, ToolTipIcon.None);
+        }
+
+        private void yearlessChange(object sender, EventArgs e)
+        {
+            if (nameList.SelectedItem == null) return;
+            file.people[nameList.SelectedIndex].yearless = yearlessCheck.Checked;
+            yearLabel.Visible = !yearlessCheck.Checked;
         }
     }
 }

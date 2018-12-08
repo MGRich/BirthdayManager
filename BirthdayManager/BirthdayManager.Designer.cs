@@ -36,6 +36,7 @@
             this.saveButton = new System.Windows.Forms.ToolStripMenuItem();
             this.saveAsButton = new System.Windows.Forms.ToolStripMenuItem();
             this.hideToTray = new System.Windows.Forms.ToolStripMenuItem();
+            this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.nameList = new System.Windows.Forms.ListBox();
             this.dateShow = new System.Windows.Forms.DateTimePicker();
             this.nameLabel = new System.Windows.Forms.Label();
@@ -49,7 +50,7 @@
             this.notifyContext = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.showStripButton = new System.Windows.Forms.ToolStripMenuItem();
             this.exitStripButton = new System.Windows.Forms.ToolStripMenuItem();
-            this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.yearlessCheck = new System.Windows.Forms.CheckBox();
             this.menuStrip.SuspendLayout();
             this.notifyContext.SuspendLayout();
             this.SuspendLayout();
@@ -105,6 +106,13 @@
             this.hideToTray.Size = new System.Drawing.Size(83, 19);
             this.hideToTray.Text = "Hide to Tray";
             this.hideToTray.Click += new System.EventHandler(this.hide);
+            // 
+            // exitToolStripMenuItem
+            // 
+            this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(37, 19);
+            this.exitToolStripMenuItem.Text = "Exit";
+            this.exitToolStripMenuItem.Click += new System.EventHandler(this.exit);
             // 
             // nameList
             // 
@@ -163,7 +171,7 @@
             // startCheck
             // 
             this.startCheck.AutoSize = true;
-            this.startCheck.Location = new System.Drawing.Point(160, 107);
+            this.startCheck.Location = new System.Drawing.Point(142, 107);
             this.startCheck.Name = "startCheck";
             this.startCheck.Size = new System.Drawing.Size(100, 17);
             this.startCheck.TabIndex = 8;
@@ -220,18 +228,23 @@
             this.exitStripButton.Text = "Exit";
             this.exitStripButton.Click += new System.EventHandler(this.exit);
             // 
-            // exitToolStripMenuItem
+            // yearlessCheck
             // 
-            this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(37, 19);
-            this.exitToolStripMenuItem.Text = "Exit";
-            this.exitToolStripMenuItem.Click += new System.EventHandler(this.exit);
+            this.yearlessCheck.AutoSize = true;
+            this.yearlessCheck.Location = new System.Drawing.Point(248, 107);
+            this.yearlessCheck.Name = "yearlessCheck";
+            this.yearlessCheck.Size = new System.Drawing.Size(66, 17);
+            this.yearlessCheck.TabIndex = 12;
+            this.yearlessCheck.Text = "Yearless";
+            this.yearlessCheck.UseVisualStyleBackColor = true;
+            this.yearlessCheck.CheckedChanged += new System.EventHandler(this.yearlessChange);
             // 
             // BirthdayManager
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(369, 131);
+            this.Controls.Add(this.yearlessCheck);
             this.Controls.Add(this.dayLabel);
             this.Controls.Add(this.yearLabel);
             this.Controls.Add(this.startCheck);
@@ -276,6 +289,7 @@
         private System.Windows.Forms.ToolStripMenuItem showStripButton;
         private System.Windows.Forms.ToolStripMenuItem exitStripButton;
         private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
+        private System.Windows.Forms.CheckBox yearlessCheck;
     }
 }
 
