@@ -41,13 +41,14 @@ namespace BirthdayManager
             if (Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run").GetValue("BirthdayManager") != null) startCheck.Checked = true;
             t.Interval = 600000;
             t.Tick += checkNotif;
+            checkNotif(this, new EventArgs());
         }
 
         private void checkNotif(object sender, EventArgs e)
         {
             if (DateTime.Today != day)
             {
-                foreach (var x in notif.Keys)
+                foreach (var x in notif.Keys.ToArray())
                 {
                     notif[x] = false;
                 }
