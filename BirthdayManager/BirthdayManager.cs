@@ -26,19 +26,16 @@ namespace BirthdayManager
         public BirthdayManager()
         {
             InitializeComponent();
-            if (Environment.GetCommandLineArgs().Length == 2)
+            if (Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run").GetValue("BirthdayManager") != null)
             {
-                if (Environment.GetCommandLineArgs()[1] == "s")
-                {
-                    Directory.SetCurrentDirectory(Path.GetDirectoryName(Application.ExecutablePath));
-                    notify("BirthdayManager is running!");
-                    hide(this, new EventArgs());
-                }
+                Directory.SetCurrentDirectory(Path.GetDirectoryName(Application.ExecutablePath));
+                notify("BirthdayManager is running!");
+                hide(this, new EventArgs());
+                startCheck.Checked = true;
             }
             Console.WriteLine(Directory.GetCurrentDirectory());
             if (!File.Exists("default.bdf")) File.Create("default.bdf").Dispose();
             open(this, new EventArgs());
-            if (Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run").GetValue("BirthdayManager") != null) startCheck.Checked = true;
             t.Interval = 600000;
             t.Tick += checkNotif;
             checkNotif(this, new EventArgs());
@@ -179,7 +176,7 @@ namespace BirthdayManager
             RegistryKey key = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
             if (startCheck.Checked)
             {
-                key.SetValue("BirthdayManager", Assembly.GetEntryAssembly().Location + " s");
+                key.SetValue("BirthdayManager", Assembly.GetEntryAssembly().Location);
             }
             else
             {
